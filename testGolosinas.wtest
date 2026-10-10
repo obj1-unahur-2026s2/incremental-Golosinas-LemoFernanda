@@ -1,0 +1,178 @@
+import golosinas.*
+import mariano.*
+
+describe "Tests de Golosinas Base - Parte 1" {
+
+  test "Bombon" {
+    const bombon = new Bombon()
+    assert.equals(15, bombon.peso())
+    assert.equals(5, bombon.precio())
+    assert.equals(frutilla, bombon.sabor())
+    assert.that(bombon.esLibreDeGluten())
+
+    bombon.recibirMordisco()
+    assert.equals(11, bombon.peso())
+
+    bombon.recibirMordisco()
+    assert.equals(7.8, bombon.peso())
+  }
+
+  test "Alfajor" {
+    const alfajor = new Alfajor()
+    assert.equals(300, alfajor.peso())
+    assert.equals(12, alfajor.precio())
+    assert.equals(chocolate, alfajor.sabor())
+    assert.notThat(alfajor.esLibreDeGluten())
+
+    alfajor.recibirMordisco()
+    assert.equals(240, alfajor.peso())
+
+    alfajor.recibirMordisco()
+    assert.equals(192, alfajor.peso())
+  }
+
+  test "Caramelo" {
+    const caramelo = new Caramelo()
+    assert.equals(5, caramelo.peso())
+    assert.equals(1, caramelo.precio())
+    assert.equals(frutilla, caramelo.sabor())
+    assert.that(caramelo.esLibreDeGluten())
+
+    caramelo.recibirMordisco()
+    assert.equals(4, caramelo.peso())
+
+    caramelo.recibirMordisco()
+    assert.equals(3, caramelo.peso())
+  }
+
+  test "Chupetin" {
+    const chupetin = new Chupetin()
+    assert.equals(7, chupetin.peso())
+    assert.equals(2, chupetin.precio())
+    assert.equals(naranja, chupetin.sabor())
+    assert.that(chupetin.esLibreDeGluten())
+
+    chupetin.recibirMordisco()
+    assert.equals(6.3, chupetin.peso())
+  }
+
+  test "Oblea (3 mordiscos)" {
+    const oblea = new Oblea()
+    assert.equals(250, oblea.peso())
+    assert.equals(5, oblea.precio())
+    assert.equals(vainilla, oblea.sabor())
+    assert.notThat(oblea.esLibreDeGluten())
+
+    oblea.recibirMordisco()
+    assert.equals(125, oblea.peso())
+
+    oblea.recibirMordisco()
+    assert.equals(62.5, oblea.peso())
+
+    oblea.recibirMordisco()
+    assert.equals(46.875, oblea.peso())
+  }
+
+  test "Chocolatín - 40g y 100g" {
+    const chocolatin40 = new Chocolatin(pesoInicial = 40)
+    assert.equals(40, chocolatin40.peso())
+    assert.equals(20, chocolatin40.precio())
+    assert.equals(chocolate, chocolatin40.sabor())
+    assert.notThat(chocolatin40.esLibreDeGluten())
+
+    chocolatin40.recibirMordisco()
+    assert.equals(38, chocolatin40.peso())
+
+    const chocolatin100 = new Chocolatin(pesoInicial = 100)
+    assert.equals(100, chocolatin100.peso())
+    assert.equals(50, chocolatin100.precio())
+
+    chocolatin100.recibirMordisco()
+    assert.equals(98, chocolatin100.peso())
+  }
+
+  test "Pastilla Tutti-Frutti" {
+    const pastilla = new PastillaTuttiFrutti(esLibreDeGluten = true)
+
+    assert.equals(5, pastilla.peso())
+    assert.equals(7, pastilla.precio())
+    assert.equals(frutilla, pastilla.sabor())
+    assert.that(pastilla.esLibreDeGluten())
+
+    pastilla.recibirMordisco()
+    assert.equals(chocolate, pastilla.sabor())
+
+    pastilla.recibirMordisco()
+    assert.equals(naranja, pastilla.sabor())
+  }
+
+  test "Golosina Bañada" {
+    const pastilla = new PastillaTuttiFrutti(esLibreDeGluten = true)
+    const baniada = new GolosinaBaniada(golosinaBase = pastilla)
+
+    assert.equals(9, baniada.peso())
+    assert.equals(9, baniada.precio())
+    assert.equals(frutilla, baniada.sabor())
+    assert.that(baniada.esLibreDeGluten())
+
+    baniada.recibirMordisco()
+    assert.equals(7, baniada.peso())
+    assert.equals(chocolate, baniada.sabor())
+  }
+}
+
+describe "Tests de Golosinas y sus variantes - Parte 3" {
+
+  test "Bombon Duro pierde 1 gramo al morder y calcula su dureza" {
+    const bombon = new BombonDuro()
+    
+    assert.equals(15, bombon.peso())
+    assert.equals(3, bombon.gradoDeDureza()) 
+    
+    bombon.recibirMordisco()
+    assert.equals(14, bombon.peso())
+  }
+
+  test "Caramelo Relleno cambia su sabor a chocolate al recibir un mordisco y vale $1 mas" {
+    const caramelo = new CarameloRelleno()
+    
+    assert.equals(2, caramelo.precio()) 
+    assert.equals(frutilla, caramelo.sabor())
+    
+    caramelo.recibirMordisco()
+    assert.equals(4, caramelo.peso()) 
+    assert.equals(chocolate, caramelo.sabor())
+  }
+
+  test "Caramelo de Sabor puede crearse con un sabor especifico" {
+    const carameloNaranja = new CarameloDeSabor(sabor = naranja)
+    assert.equals(naranja, carameloNaranja.sabor())
+  }
+
+  test "Oblea Crujiente pierde peso extra despues del tercer mordisco" {
+    const oblea = new ObleaCrujiente() 
+
+    oblea.recibirMordisco() 
+    oblea.recibirMordisco() 
+    oblea.recibirMordisco() 
+    
+    assert.notThat(oblea.estaDebil())
+    
+    oblea.recibirMordisco() 
+    assert.that(oblea.estaDebil())
+  }
+
+  test "Chocolatin VIP considera la humedad de la heladera de Mariano" {
+    heladeraDeMariano.cambiarCoeficienteDeHumedad(0.5)
+    const chocolatinVIP = new ChocolatinVIP(pesoInicial = 100)
+    
+    assert.equals(150, chocolatinVIP.peso())
+  }
+
+  test "Chocolatin Premium considera la mitad de la humedad" {
+    heladeraDeMariano.cambiarCoeficienteDeHumedad(0.5)
+    const chocolatinPremium = new ChocolatinPremium(pesoInicial = 100)
+    
+    assert.equals(125, chocolatinPremium.peso())
+  }
+}

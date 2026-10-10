@@ -1,0 +1,54 @@
+import golosinas.*
+import mariano.*
+
+describe "Tests de Mariano" {
+
+  test "Mariano compra chocolatín, caramelo y bombón y realiza las comprobaciones" {
+    
+    // Instanciar las golosinas
+    const chocolatin = new Chocolatin(pesoInicial = 40)
+    const caramelo = new Caramelo()
+    const bombon = new Bombon()
+    const alfajor = new Alfajor()
+    const chupetin = new Chupetin()
+    
+    mariano.comprar(chocolatin)
+    mariano.comprar(caramelo)
+    mariano.comprar(bombon)
+
+    assert.equals(3, mariano.cantidadDeGolosinas())
+    assert.that(mariano.tieneLaGolosina(bombon))
+    assert.notThat(mariano.tieneLaGolosina(alfajor))
+
+    assert.equals(60, mariano.pesoGolosinas()) 
+
+    assert.equals(chocolatin, mariano.golosinaMasCara())
+
+  
+    assert.equals(#{chocolate, frutilla}, mariano.sabores())
+
+    assert.equals(caramelo, mariano.golosinaDeSabor(frutilla))
+    assert.equals([caramelo, bombon], mariano.golosinasDeSabor(frutilla))
+
+    assert.notThat(mariano.preciosCuidados())
+    assert.that(mariano.hayGolosinaSinTACC())
+
+    assert.equals(
+      #{alfajor, chupetin}, 
+      mariano.golosinasFaltantes(#{alfajor, bombon, chocolatin, chupetin})
+    )
+    assert.equals(
+      #{vainilla}, 
+      mariano.gustosFaltantes(#{chocolate, frutilla, vainilla})
+    )
+
+    mariano.probarGolosinas()
+    assert.equals(38, chocolatin.peso())
+    assert.equals(4, caramelo.peso())
+    assert.equals(11, bombon.peso())
+
+    mariano.desechar(caramelo)
+    assert.equals(2, mariano.cantidadDeGolosinas())
+    assert.notThat(mariano.tieneLaGolosina(caramelo))
+  }
+}
